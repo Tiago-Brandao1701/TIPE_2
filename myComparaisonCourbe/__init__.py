@@ -1,0 +1,1 @@
+from .myComparaisonCourbe import score
