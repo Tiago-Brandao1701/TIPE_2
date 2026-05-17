@@ -1,74 +1,86 @@
 from myVecteur import Vecteur, VecteurList
 from myAstre import Astre, AstreList
 from cstes import *
-import pygame
-
-'''
-Gere simplement l'affichage de la solution
-'''
+import vpython as vp
 
 class Affichage:
     def __init__(self):
-        #camera
-        self.cam = Vecteur(0,0,0)
-        self.echelle = 1e-9  
-        self.vitesse = 5
-        #ecran
-        self.screen = pygame.display.set_mode((1280, 720))
-        self.screen_dim = Vecteur(self.screen.get_width(), self.screen.get_height(), 0)
+        # initialisation de la scene
+        vp.scene.title = """Modélisation du système solaire"""
 
-    #l'affichage est fait en 2D, puisque tout est globalement dans le meme plan
-    def affichage(self,astres,satellite,cible,realTime,t):
-        self.screen.fill("black")
-        self.afficheTrajectoires(astres, satellite, cible, t)
-        self.afficheAstres(astres,satellite,cible,t)
-        self.afficheTemps(realTime)
-        pygame.display.update()
+        # taille de la fenêtre VPython
+        vp.scene.width = 1600
+        vp.scene.height = 900
+
+        # position et caméra
+        vp.scene.center = vp.vector(0, 0, 0)
+        vp.scene.forward = vp.vector(-1, -1, -1)
+        vp.scene.range = 200
+
+        self.echelle_distances = 1e-9
+        self.i_centre = 0
+        self.i_cible = 0
+        self.representants = []
+        
+
     
-    def afficheAstres(self,astres, satellite,cible,t):
-        for astre in astres:
-            if astre.nom == satellite.nom :
-                position_x_y = (
-                    self.screen_dim.x/2 + (cible.trajectoire[t].x+astre.trajectoire[t].x)*self.echelle +self.cam.x,
-                    self.screen_dim.y/2 + (cible.trajectoire[t].y+astre.trajectoire[t].y)*self.echelle + self.cam.y
-                    )
-            else:   
-                position_x_y = (
-                    self.screen_dim.x/2 + astre.trajectoire[t].x*self.echelle +self.cam.x,
-                    self.screen_dim.y/2 + astre.trajectoire[t].y*self.echelle + self.cam.y
-                    )
-            pygame.draw.circle(self.screen, astre.couleur, position_x_y , astre.taille_aff)
-            #print(f"{astre.nom} screen position: ({position_x_y}),({astre.acc.x},{astre.acc.y},{astre.acc.z})")
+    def creerAstres(self,astres,i_cible):
+        self.i_cible = i_cible
+        couleurs_planetes=[vp.color.red, vp.color.yellow,vp.vector(0,0.58,0.69),vp.color.white]
+        taille_planetes = [6,40,10,7]
+        for i,astre in enumerate(astres):
+            #print(f"creation de l'astre: {astre.nom}")
+            if astre.nom != "satellite":
+                self.representants.append(vp.sphere(pos=(vp.vector(astre.trajectoire[0].x,astre.trajectoire[0].y,astre.trajectoire[0].z))*self.echelle_distances,radius=taille_planetes[i],color=couleurs_planetes[i],make_trail =True))
+                if astre.nom == "Soleil":
+                    self.representants[i].emissive =True
+                    self.representants[i].make_trail = False
+            else:
+                self.representants.append(vp.sphere(pos=vp.vector((vp.vector(astre.trajectoire[0].x + astres[i_cible].trajectoire[0].x,astre.trajectoire[0].y + astres[i_cible].trajectoire[0].y,astre.trajectoire[0].z +astres[i_cible].trajectoire[0].z))*self.echelle_distances),radius=taille_planetes[i],color=couleurs_planetes[i],make_trail =True))
+        return self.representants
 
-    def afficheTemps(self,t):
+    def creer_boutons(self,astres):
+        def mode_cinematique(evt):
+            if evt.checked:
+                vp.scene.lights=[]
+                vp.local_light(pos=vp.vec(0, 0, 0), color=vp.color.yellow)
+            else:
+                vp.scene.lights=[]
+                vp.distant_light(direction=vp.vec( 0.22, 0.44, 0.88), color=vp.color.white*0.8)
+                vp.distant_light(direction=vp.vec( -0.88, -0.22, -0.44), color=vp.color.white*0.3)
+                vp.scene.ambient = vp.color.white*0.2
+        def centre_astre(evt):
+            self.i_centre=evt.index
+        bouton_cinematique = vp.checkbox( bind=mode_cinematique, text='mode cinématique\n', checked=False)
+        choicelist = [astre.nom for astre in astres]
+        vp.menu(choices=choicelist, bind=centre_astre,index = self.i_centre,selected="Choisir le centre")
+
+
+    def afficheAstres(self,astres,t,i_cible):
+        i_centre=self.i_centre
+        if astres[i_centre].nom == "satellite":
+            vp.scene.center=vp.vector((vp.vector(astres[i_centre].trajectoire[t].x + astres[i_cible].trajectoire[t].x,astres[i_centre].trajectoire[t].y + astres[i_cible].trajectoire[t].y,astres[i_centre].trajectoire[t].z +astres[i_cible].trajectoire[t].z))*self.echelle_distances)
+        else:
+            vp.scene.center=vp.vector(astres[i_centre].trajectoire[t].x,astres[i_centre].trajectoire[t].y,astres[i_centre].trajectoire[t].z)*self.echelle_distances
+
+        
+        for i,astre in enumerate(astres):
+            if t==0:
+                self.representants[i].clear_trail()
+            if astre.nom!="satellite":
+                self.representants[i].pos=vp.vector((vp.vector(astre.trajectoire[t].x,astre.trajectoire[t].y,astre.trajectoire[t].z))*self.echelle_distances)
+            else:
+                self.representants[i].pos=vp.vector((vp.vector(astre.trajectoire[t].x + astres[i_cible].trajectoire[t].x,astre.trajectoire[t].y + astres[i_cible].trajectoire[t].y,astre.trajectoire[t].z +astres[i_cible].trajectoire[t].z))*self.echelle_distances)
+            
+
+    def afficheTemps(self,realTime,tpsSim):
         global earthYear
-        year=round(t/earthYear,3)
-        font=pygame.font.Font(None,16)
-        txt=font.render(f"{year} années ou {t} secondes",True,(255,255,255))
-        self.screen.blit(txt,(100,650))
+        year=round(realTime/earthYear,3)
+        #vp.scene.caption= (f"\n\n\n\nTemps réel : {year} années \nTemps simulation : {round(tpsSim,2)} secondes")
 
-    def afficheTrajectoires(self, astres, satellite, cible, t):
-        for astre in astres:
-            points = []
 
-            for i in range(0, t + 1, 20):
-                if astre.nom == satellite.nom:
-                    x = self.screen_dim.x/2 + (cible.trajectoire[i].x + astre.trajectoire[i].x) * self.echelle + self.cam.x
-                    y = self.screen_dim.y/2 + (cible.trajectoire[i].y + astre.trajectoire[i].y) * self.echelle + self.cam.y
-                else:
-                    x = self.screen_dim.x/2 + astre.trajectoire[i].x * self.echelle + self.cam.x
-                    y = self.screen_dim.y/2 + astre.trajectoire[i].y * self.echelle + self.cam.y
-
-                points.append((x, y))
-
-            if len(points) > 1:
-                pygame.draw.lines(
-                    self.screen,
-                    astre.couleur,
-                    False,
-                    points,
-                    1
-                )
-                
+    def affichage(self,astres,realTime,tpsSim,t,i_cible):
+        self.afficheAstres(astres,t,i_cible)
+        self.afficheTemps(realTime,tpsSim)  
 
             
