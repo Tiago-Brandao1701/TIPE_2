@@ -35,7 +35,7 @@ ParamsLancer MonteCarlo::recherche(){
     for (int i = 0; i<nbEssais; i++){
         lancer.paramsLancer = randParamsLancer();
         courbe = lancer.simulation();
-        coutLancer = ComparaisonCourbe::score(courbe, f);
+        coutLancer = ComparaisonCourbe::score(courbe, lancer.nbPts, f);
         if (coutLancer<coutOpti){
             coutOpti = coutLancer;
             paramsOpti = lancer.paramsLancer;

@@ -39,7 +39,7 @@ ParticleSwarmOptimisation::ParticleSwarmOptimisation(
 double ParticleSwarmOptimisation::cout(const ParamsLancer& params) {
     simulationLancer.paramsLancer = params;
     std::vector<Vecteur> courbe = simulationLancer.simulation();
-    return ComparaisonCourbe::score(courbe, f);
+    return ComparaisonCourbe::score(courbe, simulationLancer.nbPts, f);
 }
 
 double ParticleSwarmOptimisation::alea(double min, double max) {

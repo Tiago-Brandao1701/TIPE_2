@@ -20,6 +20,7 @@ class Affichage:
     #l'affichage est fait en 2D, puisque tout est globalement dans le meme plan
     def affichage(self,astres,satellite,cible,realTime,t):
         self.screen.fill("black")
+        self.afficheTrajectoires(astres, satellite, cible, t)
         self.afficheAstres(astres,satellite,cible,t)
         self.afficheTemps(realTime)
         pygame.display.update()
@@ -45,6 +46,29 @@ class Affichage:
         font=pygame.font.Font(None,16)
         txt=font.render(f"{year} années ou {t} secondes",True,(255,255,255))
         self.screen.blit(txt,(100,650))
-            
+
+    def afficheTrajectoires(self, astres, satellite, cible, t):
+        for astre in astres:
+            points = []
+
+            for i in range(0, t + 1, 20):
+                if astre.nom == satellite.nom:
+                    x = self.screen_dim.x/2 + (cible.trajectoire[i].x + astre.trajectoire[i].x) * self.echelle + self.cam.x
+                    y = self.screen_dim.y/2 + (cible.trajectoire[i].y + astre.trajectoire[i].y) * self.echelle + self.cam.y
+                else:
+                    x = self.screen_dim.x/2 + astre.trajectoire[i].x * self.echelle + self.cam.x
+                    y = self.screen_dim.y/2 + astre.trajectoire[i].y * self.echelle + self.cam.y
+
+                points.append((x, y))
+
+            if len(points) > 1:
+                pygame.draw.lines(
+                    self.screen,
+                    astre.couleur,
+                    False,
+                    points,
+                    1
+                )
+                
 
             

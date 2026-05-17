@@ -95,3 +95,6 @@ const double thetaDebutMax = pi/4.0;
 const int tailleSatellite = 5;
 const double masseSatellite = 1000.0;
 const std::string couleurSatellite = "white";
+
+/*cstes pour le cout*/
+const double dist_max = 400e9; 

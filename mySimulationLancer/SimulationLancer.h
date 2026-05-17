@@ -43,13 +43,13 @@ public:
     int nbSimulations;
     Astre getSatellite();
     void updateCI(ParamsLancer newParams);
+    int nbPts;
 
 private:
     std::vector<Astre>& astres;
     const Astre& cible;
     const Astre& terre;
     Astre satellite;
-    int nbPts;
     int t;
     bool initTrajAstres;
 

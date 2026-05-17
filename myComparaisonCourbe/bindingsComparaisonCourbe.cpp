@@ -10,7 +10,7 @@ PYBIND11_MODULE(myComparaisonCourbe,m){
     py::class_<ComparaisonCourbe>(m, "ComparaisonCourbe")
         .def(py::init<>())  // constructeur par défaut
         .def_static("score", &ComparaisonCourbe::score,
-                    py::arg("courbe"), py::arg("fonction"))
+                    py::arg("courbe"),py::arg("nbPts"), py::arg("fonction"))
         .def_static("trouveDistMin", &ComparaisonCourbe::trouveDistMin,
                     py::arg("courbe"));
 }

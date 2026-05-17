@@ -92,4 +92,6 @@ PYBIND11_MODULE(cstes, m) {
     m.attr("tailleSatellite") = tailleSatellite;
     m.attr("masseSatellite") = masseSatellite;
     m.attr("couleurSatellite") = couleurSatellite;
-}
+
+    //cstes pour le cout
+    m.attr("dist_max") = dist_max;}

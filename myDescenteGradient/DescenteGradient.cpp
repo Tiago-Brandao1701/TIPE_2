@@ -23,19 +23,19 @@ ParamsLancer DescenteGradient::gradient(){
     //Derivee partielle par rapport a phi
     lancer.paramsLancer.phi += dphi;
     courbe = lancer.simulation();
-    double dpphi = (ComparaisonCourbe::score(courbe, f) - coutOpti)/dphi;
+    double dpphi = (ComparaisonCourbe::score(courbe, lancer.nbPts, f) - coutOpti)/dphi;
     lancer.paramsLancer.phi = paramsOpti.phi;
     
     //Derivee partielle par rapport a theta
     lancer.paramsLancer.theta += dtheta;
     courbe = lancer.simulation();
-    double dptheta = (ComparaisonCourbe::score(courbe, f) - coutOpti)/dtheta;
+    double dptheta = (ComparaisonCourbe::score(courbe, lancer.nbPts, f) - coutOpti)/dtheta;
     lancer.paramsLancer.theta = paramsOpti.theta;
     
     //Derivee partielle par rapport a vitesse
     lancer.paramsLancer.vitesse += dvitesse;
     courbe = lancer.simulation();
-    double dpvitesse = (ComparaisonCourbe::score(courbe, f) - coutOpti)/dvitesse;
+    double dpvitesse = (ComparaisonCourbe::score(courbe, lancer.nbPts, f) - coutOpti)/dvitesse;
     lancer.paramsLancer.vitesse = paramsOpti.vitesse;
     
     return ParamsLancer(dpphi,dptheta,dpvitesse);
@@ -86,7 +86,7 @@ ParamsLancer DescenteGradient::recherche(){
 
         // Simulation
         std::vector<Vecteur> courbe = lancer.simulation();
-        coutOpti = ComparaisonCourbe::score(courbe, f);
+        coutOpti = ComparaisonCourbe::score(courbe, lancer.nbPts, f);
 
         std::cout << "Iteration: " << i 
                   << "  cout: " << coutOpti 

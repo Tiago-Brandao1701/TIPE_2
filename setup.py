@@ -124,10 +124,13 @@ setup(
                 "myComparaisonCourbe/ComparaisonCourbe.cpp",
                 "myComparaisonCourbe/bindingsComparaisonCourbe.cpp",
                 "myVecteur/Vecteur.cpp",
+                "cstes/cstes.cpp",
+                "cstes/bindingsCstes.cpp",
             ],
             include_dirs=[
                 "myComparaisonCourbe",
                 "myVecteur",
+                "cstes",
                 pybind11.get_include(),
             ],
             language="c++",

@@ -78,4 +78,6 @@ from .cstes import (
     tailleSatellite,
     masseSatellite,
     couleurSatellite,
+    #cout
+    dist_max,
     )

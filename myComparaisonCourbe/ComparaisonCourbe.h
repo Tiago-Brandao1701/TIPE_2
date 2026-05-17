@@ -2,8 +2,10 @@
 #define COMPARAISON_COURBES_H
 
 #include <vector>
-#include "Vecteur.h"
 #include <functional>
+
+#include "Vecteur.h"
+#include "cstes.h"
 
 /*
 Calcule un score en fonction de la ressemblance entre la trajectoire du satellite et la trajectoire theorique
@@ -14,7 +16,7 @@ point theorique associé.
 
 class ComparaisonCourbe{
 public:
-    static double score(std::vector<Vecteur>& courbe, std::function<double(Vecteur)> fonction);
+    static double score(std::vector<Vecteur>& courbe, int nbPts, std::function<double(Vecteur)> fonction);
     static double trouveDistMin(std::vector<Vecteur>& courbe);
     static double test(Vecteur params);
 };

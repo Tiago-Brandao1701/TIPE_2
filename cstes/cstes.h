@@ -104,5 +104,8 @@ extern const int tailleSatellite;
 extern const double masseSatellite;
 extern const std::string couleurSatellite;
 
+/*cstes pour le cout*/
+extern const double dist_max;
+
 #endif
 //CONSTANTS_H
