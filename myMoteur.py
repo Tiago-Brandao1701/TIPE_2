@@ -37,21 +37,38 @@ class Moteur:
                 break
 
     def run(self):
-        self.paramsOpti = self.chatGPT.recherche()
-        self.tpsSim = monotonic() - self.startTime 
-        print(f"paramsOpti: \n \t phi = {self.paramsOpti.phi} \n \t theta = {self.paramsOpti.theta} \n \t vitesse = {self.paramsOpti.vitesse}")
-        print(f"temps de simulation :{self.tpsSim}")
-        print(f"temps par simulation de lancer:{self.tpsSim/self.chatGPT.getNbSims()}")
-        self.getDonneesCPP()
-        t=0
-        tpsAffDebut=monotonic()
-        self.representants = self.affichage.creerAstres(self.astres,self.i_cible)
-        self.affichage.creer_boutons(self.astres)
-        while self.running :
-            vp.rate(600)
-            self.realTime += dt
-            self.affichage.affichage(self.astres,self.realTime,monotonic()-tpsAffDebut,t,self.i_cible)
-            t= (t+1)%self.nbPts
-            if t == 0: #La simulation boucle
-                self.realTime = 0
-                tpsAffDebut=monotonic()
+        try:
+            self.paramsOpti = self.chatGPT.recherche()
+            self.tpsSim = monotonic() - self.startTime
+
+            print(f"paramsOpti: \n \t phi = {self.paramsOpti.phi} \n \t theta = {self.paramsOpti.theta} \n \t vitesse = {self.paramsOpti.vitesse}")
+            print(f"temps de simulation :{self.tpsSim}")
+            print(f"temps par simulation de lancer:{self.tpsSim/self.chatGPT.getNbSims()}")
+
+            self.getDonneesCPP()
+            t = 0
+            tpsAffDebut = monotonic()
+
+            self.representants = self.affichage.creerAstres(self.astres, self.i_cible)
+            self.affichage.creer_boutons(self.astres)
+
+            while self.running:
+                vp.rate(600)
+                self.realTime += dt
+                self.affichage.affichage(
+                    self.astres,
+                    self.realTime,
+                    monotonic() - tpsAffDebut,
+                    t,
+                    self.i_cible
+                )
+
+                t = (t + 1) % self.nbPts
+
+                if t == 0:
+                    self.realTime = 0
+                    tpsAffDebut = monotonic()
+
+        finally:
+            import time
+            time.sleep(1)

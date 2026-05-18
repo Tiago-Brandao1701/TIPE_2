@@ -17,7 +17,7 @@ const double G = 6.67430e-11;
 //MonteCarlo 
 const int nbEssaisMonteCarlo = 1000;
 //Descente du gradient
-const int nbIterDescenteGradient = 100;
+const int nbIterDescenteGradient = 0;
 const double dphi = 1e-3;
 const double dtheta = 1e-3;
 const double dvitesse = 20e-1;
@@ -29,7 +29,7 @@ const double epsilon = 1e-8;
 const double weightDecay = 0.5; //paramètre réglable
 //PSO
 const int nbParticules = 30;
-const int nbIterPSO = 100;  //parametres tous a regler    
+const int nbIterPSO = 0;  //parametres tous a regler    
 const double inertie = 0.7;
 const double coefCognitif = 1.4; 
 const double coefSocial = 1.4;
