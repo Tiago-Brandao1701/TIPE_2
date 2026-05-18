@@ -102,6 +102,7 @@ void ParticleSwarmOptimisation::initialiserEssaim() {
 }
 
 ParamsLancer ParticleSwarmOptimisation::recherche() {
+    printf("Debut PSO \n");
     for (int i = 0; i < nbIterPSO; i++) {
         for (Particule& p : essaim) {
             //Generation des params lancer
@@ -141,6 +142,9 @@ ParamsLancer ParticleSwarmOptimisation::recherche() {
                 meilleurCoutGlobal = c;
                 meilleurePositionGlobale = p.position;
             }
+        }
+        if (i%10 == 0){
+            printf ("iter: %d \n", i);
         }
     }
     return meilleurePositionGlobale;

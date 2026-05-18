@@ -18,6 +18,7 @@ class Moteur:
     def __init__(self):
         self.startTime = monotonic()
         self.running = True
+        self.paused = False
         self.affichage = Affichage()
         self.realTime = 0       #temps en secondes
         self.chatGPT = TrouveCI(geostatMars,nomCible)
@@ -36,8 +37,18 @@ class Moteur:
                 self.i_cible = i
                 break
 
+    def toggle_pause(self, b):
+        self.paused = not self.paused
+
+        if self.paused:
+            b.text = "Reprendre"
+        else:
+            b.text = "Pause"
+
     def run(self):
         try:
+            self.paused = False
+
             self.paramsOpti = self.chatGPT.recherche()
             self.tpsSim = monotonic() - self.startTime
 
@@ -52,9 +63,21 @@ class Moteur:
             self.representants = self.affichage.creerAstres(self.astres, self.i_cible)
             self.affichage.creer_boutons(self.astres)
 
+            # Bouton pause
+            vp.button(
+                text="Pause",
+                bind=self.toggle_pause
+            )
+
             while self.running:
                 vp.rate(600)
+
+                # Si en pause, on saute la mise à jour
+                if self.paused:
+                    continue
+
                 self.realTime += dt
+
                 self.affichage.affichage(
                     self.astres,
                     self.realTime,

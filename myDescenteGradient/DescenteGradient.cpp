@@ -77,7 +77,7 @@ ParamsLancer DescenteGradient::recherche(){
     std::cout << "Debut descente gradient " << std::endl;
     printf("cout %f", coutOpti);
     std::vector<Vecteur> courbe;
-    for (int i = 0 ; i<nbIter && coutOpti > 10e6; i++){
+    for (int i = 0 ; i<nbIter && coutOpti > 10; i++){
         /*courbe = lancer.simulation();
         coutOpti = ComparaisonCourbe::score(courbe , f);
         std::cout << "Iteration: " << i << "\n" << "cout: " << coutOpti << std::endl;
@@ -87,13 +87,15 @@ ParamsLancer DescenteGradient::recherche(){
         // Simulation
         std::vector<Vecteur> courbe = lancer.simulation();
         coutOpti = ComparaisonCourbe::score(courbe, lancer.nbPts, f);
-
-        std::cout << "Iteration: " << i 
+        if (i%10 == 0){
+            std::cout << "Iteration: " << i 
                   << "  cout: " << coutOpti 
                   << "  phi: " << paramsOpti.phi
                   << "  theta: " << paramsOpti.theta
                   << "  v: " << paramsOpti.vitesse
                   << std::endl;
+        }
+        
 
         // Mise à jour des conditions initiales
         lancer.updateCI(paramsOpti);

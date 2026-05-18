@@ -40,8 +40,10 @@ ParamsLancer MonteCarlo::recherche(){
             coutOpti = coutLancer;
             paramsOpti = lancer.paramsLancer;
         }
-        std::cout << "essai " << i << std::endl;
-        printf("cout opti %f \n", coutOpti);
+        if (i%10 == 0){
+            std::cout << "essai " << i << std::endl;
+            printf("cout opti %f \n", coutOpti);
+        }
     }
     std::cout << std::endl;
     return paramsOpti;

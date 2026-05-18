@@ -25,13 +25,12 @@ void SimulationLancer::trouveNbPts() {
     }        
     else{
         double d = cible.trajectoire[0].distance(terre.trajectoire[0]);
-        nbPts = static_cast<int>(((d / vitesse) / dt) * 20.0);
-        int nbPts_an = (3600*24*366)/dt;
+        nbPts = 5*static_cast<int>(((d / vitesse) / dt) * 20.0);
+        int nbPts_an = (5*3600*24*366)/dt;
         if (nbPts > nbPts_an){
             nbPts = nbPts_an;
         }
     }
-    std::cout<<"nbPoints: " << nbPts << std::endl; 
 }
 
 Vecteur SimulationLancer::trouvePosSatellite() const {
